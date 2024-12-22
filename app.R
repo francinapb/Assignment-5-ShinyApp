@@ -141,6 +141,13 @@ ui <- dashboardPage(
                 box(title = "Mortality Over Time by CVD", width = 12,
                     plotlyOutput("mortality_rate_plot"))
               )
+      ),
+      # Blood Pressure Relationship Plot Tab
+      tabItem(tabName = "bp_plot",
+              fluidRow(
+                box(title = "Blood Pressure Relationship", width = 12,
+                    plotlyOutput("bp_relationship_plot"))
+              )
       )
     )
   )
@@ -231,6 +238,22 @@ server <- function(input, output) {
            color = "CVD", linetype = "CVD")
     ggplotly(plot2)
   })
+  # Scatter Plot for month and mortality rate are both continuous variables
+  output$bp_relationship_plot <- renderPlotly({
+    plot3 <- ggplot(dig.df, aes(x = SYSBP, y = DIABP, colour = TRTMT, shape = TRTMT)) +
+      geom_point() +
+      geom_smooth(method = "lm", formula = y ~ x, se = F) +
+      labs(
+        title = "Relationship between Systolic and Diastolic Blood Pressure",
+        x = "Systolic Blood Pressure (mmHg)",
+        y = "Diastolic Blood Pressure (mmHg)",
+        color = "Treatment Type",
+        shape = "Treatment Type"
+      ) +
+      scale_color_manual(values = c("Placebo" = "#000", "Treatment" = "#008B8B"))
+    ggplotly(plot3)
+  })
 }
 
 shinyApp(ui, server)
+
