@@ -133,6 +133,14 @@ ui <- dashboardPage(
                 box(title = "Worsening Heart Failure and Hospitalizations", width = 12,
                     plotlyOutput("whf_hosp_plot"))
               )
+      ),
+      # Mortality Over Time Plot Tab
+      
+      tabItem(tabName = "mortality_plot",
+              fluidRow(
+                box(title = "Mortality Over Time by CVD", width = 12,
+                    plotlyOutput("mortality_rate_plot"))
+              )
       )
     )
   )
@@ -211,6 +219,17 @@ server <- function(input, output) {
            x = "Hospitalized?", fill = "WHF")
     
     ggplotly(WHF_HOSP)
+  })
+  # Line Plot for Mortality Rate Over Time
+  output$mortality_rate_plot <- renderPlotly({
+    plot2 <- ggplot(risk_mortality_summary2, aes(x = Month, y = Mortality_Rate, color = CVD, linetype = CVD)) +
+      geom_line(size = 0.7) +
+      geom_point(size = 2) +
+      facet_wrap(~TRTMT, nrow = 2) +
+      labs(x = "Time in Months", y = "Mortality Rate",
+           title = "Effect of Cardiovascular Disease on Mortality Over Time by Treatment",
+           color = "CVD", linetype = "CVD")
+    ggplotly(plot2)
   })
 }
 
