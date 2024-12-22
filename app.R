@@ -6,7 +6,6 @@
 #
 #    https://shiny.posit.co/
 #
-
 library(shiny)
 library(shinydashboard)
 library(plotly)
@@ -16,7 +15,7 @@ library(ggmosaic)
 library(readr)
 
 # Load the dataset
-dig.df <- read_csv("C:/Users/yasha/Downloads/Assignment5/DIG.csv")
+dig.df <- read_csv("DIG.csv")
 
 # Data Preparation
 dig.df <- dig.df %>%
@@ -88,9 +87,58 @@ ui <- dashboardPage(
       }
     "))
     ),
+    
+    tabItems(
+      # Introduction Tab
+      tabItem(tabName = "Introduction",
+              fluidRow(
+                box(
+                  title = "Welcome to the DIG Trial Dashboard",
+                  width = 12,
+                  class = "introduction-box",
+                  tags$p(HTML("
+              <strong>The DIG (Digitalis Investigation Group) Trial</strong> was a randomized, double-blind, multicenter trial with more than 300 centers in the United States and Canada participating. The purpose of the trial was to examine the safety and efficacy of Digoxin in treating patients with congestive heart failure in sinus rhythm. Digitalis was introduced clinically more than 200 years ago and has since become a commonly prescribed medication for the treatment of heart failure; however, there was considerable uncertainty surrounding its safety and efficacy. <br><br>
+            
+              Small trials indicated that Digoxin alleviated some of the symptoms of heart failure, prolonged exercise tolerance, and generally improved the quality of patients' lives. Unfortunately, these trials were generally small and although they did focus on the effect of treatment on patients’ relief from heart failure symptoms and quality of life, they failed to address the effect of treatment on cardiovascular outcomes. Questions about the safety of Digoxin were also a concern. Digoxin toxicity is uncommon in small trials with careful surveillance, however, the long-term effects of therapeutic levels of Digoxin were less clear. <br><br>
+            
+              The DIG dataset consists of baseline and outcome data from the main DIG trial. In the main trial, heart failure patients meeting the eligibility criterion and whose ejection fraction was 45% or less were randomized to receive either a placebo or digoxin. Outcomes assessed in the trial included: cardiovascular mortality, hospitalization or death from worsening heart failure, hospitalization due to other cardiovascular causes and hospitalization due to non-cardiovascular causes. <br><br>
+            
+              The <strong>DIG</strong> dataset was obtained for the purpose of this assignment and is enclosed with this assignment. The codebook associated with the variables is also enclosed with your assignment. <br><br>
+            
+              In order to create an anonymous dataset that protects patient confidentiality, most variables have been permuted over the set of patients within the treatment group. Therefore, it would be inappropriate to use this dataset for other research or publication purposes.
+            "))
+                )
+              )
+      ),
+      
+      # Hospitalization Plot Tab
+      tabItem(tabName = "hospital_plot",
+              fluidRow(
+                box(title = "Hospitalizations by Treatment", width = 12,
+                    plotlyOutput("hospital_plot"))
+              )
+      ),
+      
+      # CVD and Mortality Plot Tab
+      tabItem(tabName = "cvd_plot",
+              fluidRow(
+                box(title = "Cardiovascular Disease and Mortality", width = 12,
+                    plotlyOutput("cvd_mortality_plot"))
+              )
+      ),
+      
+      # WHF and Hospitalization Plot Tab
+      tabItem(tabName = "whf_plot",
+              fluidRow(
+                box(title = "Worsening Heart Failure and Hospitalizations", width = 12,
+                    plotlyOutput("whf_hosp_plot"))
+              )
+      )
+    )
   )
 )
-#Server
+
+# Server
 server <- function(input, output) {
   
   # Reactive filtered dataset
@@ -128,50 +176,42 @@ server <- function(input, output) {
       color = "green"
     )
   })
+  
+  
+  # Hospitalization Bar Plot
+  output$hospital_plot <- renderPlotly({
+    hospitalizations <- ggplot(dig.df, aes(x = HOSP, fill = TRTMT)) +
+      geom_bar(position = "dodge") +
+      labs(title = "Hospitalizations by Treatment", x = "Hospitalized?", fill = "Treatment") +
+      scale_fill_manual(values = c("#FFAEB9", "#B03060"))
+    
+    ggplotly(hospitalizations)
+  })
+  
+  # CVD and Mortality Mosaic Plot
+  output$cvd_mortality_plot <- renderPlotly({
+    CVD_mortality <- ggplot(dig.df) +
+      geom_mosaic(aes(x = product(CVD), fill = DEATH)) +
+      labs(title = "Cardiovascular Disease and Mortality by Treatment",
+           x = "Suffers from CVD",
+           fill = "Mortality") +
+      facet_wrap(~TRTMT) +
+      scale_fill_manual(values = c("#FFF68F", "#4682B4"))
+    
+    ggplotly(CVD_mortality)
+  })
+  
+  # WHF and Hospitalization Plot
+  output$whf_hosp_plot <- renderPlotly({
+    WHF_HOSP <- ggplot(dig.df, aes(x = HOSP, fill = WHF)) +
+      geom_bar() +
+      facet_wrap(~TRTMT) +
+      scale_fill_manual(values = c("Yes" = "#90EE90", "No" = "#607B6B")) +
+      labs(title = "Hospitalizations for Worsening Heart Failure by Treatment",
+           x = "Hospitalized?", fill = "WHF")
+    
+    ggplotly(WHF_HOSP)
+  })
 }
-# Hospitalization Bar Plot
-
-output$hospital_plot <- renderPlotly({
-  
-  hospitalizations <- ggplot(dig.df, aes(x = HOSP, fill = TRTMT)) +
-    
-    geom_bar(position = "dodge") +
-    
-    labs(title = "Hospitalizations by Treatment", x = "Hospitalized?", fill = "Treatment") +
-    
-    scale_fill_manual(values = c("#FFAEB9", "#B03060"))
-  
-  
-  
-  ggplotly(hospitalizations)
-  
-})
-
-
-
-# CVD and Mortality Mosaic Plot
-
-output$cvd_mortality_plot <- renderPlotly({
-  
-  CVD_mortality <- ggplot(dig.df) +
-    
-    geom_mosaic(aes(x = product(CVD), fill = DEATH)) +
-    
-    labs(title = "Cardiovascular Disease and Mortality by Treatment",
-         
-         x = "Suffers from CVD",
-         
-         fill = "Mortality") +
-    
-    facet_wrap(~TRTMT) +
-    
-    scale_fill_manual(values = c("#FFF68F", "#4682B4"))
-  
-  
-  
-  ggplotly(CVD_mortality)
-  
-})
 
 shinyApp(ui, server)
-
