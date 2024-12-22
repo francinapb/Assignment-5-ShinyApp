@@ -129,6 +129,49 @@ server <- function(input, output) {
     )
   })
 }
+# Hospitalization Bar Plot
+
+output$hospital_plot <- renderPlotly({
+  
+  hospitalizations <- ggplot(dig.df, aes(x = HOSP, fill = TRTMT)) +
+    
+    geom_bar(position = "dodge") +
+    
+    labs(title = "Hospitalizations by Treatment", x = "Hospitalized?", fill = "Treatment") +
+    
+    scale_fill_manual(values = c("#FFAEB9", "#B03060"))
+  
+  
+  
+  ggplotly(hospitalizations)
+  
+})
+
+
+
+# CVD and Mortality Mosaic Plot
+
+output$cvd_mortality_plot <- renderPlotly({
+  
+  CVD_mortality <- ggplot(dig.df) +
+    
+    geom_mosaic(aes(x = product(CVD), fill = DEATH)) +
+    
+    labs(title = "Cardiovascular Disease and Mortality by Treatment",
+         
+         x = "Suffers from CVD",
+         
+         fill = "Mortality") +
+    
+    facet_wrap(~TRTMT) +
+    
+    scale_fill_manual(values = c("#FFF68F", "#4682B4"))
+  
+  
+  
+  ggplotly(CVD_mortality)
+  
+})
 
 shinyApp(ui, server)
 
