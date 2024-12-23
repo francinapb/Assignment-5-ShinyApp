@@ -157,43 +157,6 @@ ui <- dashboardPage(
 # Server
 server <- function(input, output) {
   
-  # Reactive filtered dataset
-  filtered_data <- reactive({
-    dig.df %>%
-      filter(TRTMT == input$treatment_filter,
-             SEX == input$sex_filter,
-             CVD == input$cvd_filter)
-  })
-  
-  # Value Boxes
-  output$death_count <- renderValueBox({
-    valueBox(
-      sum(dig.df$DEATH == "Death", na.rm = TRUE),
-      "Total Deaths",
-      icon = icon("heartbeat"),
-      color = "red"
-    )
-  })
-  
-  output$hospital_count <- renderValueBox({
-    valueBox(
-      sum(dig.df$HOSP == "Yes", na.rm = TRUE),
-      "Total Hospitalizations",
-      icon = icon("hospital"),
-      color = "blue"
-    )
-  })
-  
-  output$treatment_count <- renderValueBox({
-    valueBox(
-      table(dig.df$TRTMT)["Treatment"],
-      "Patients on Treatment",
-      icon = icon("prescription-bottle"),
-      color = "green"
-    )
-  })
-  
-  
   # Hospitalization Bar Plot
   output$hospital_plot <- renderPlotly({
     hospitalizations <- ggplot(dig.df, aes(x = HOSP, fill = TRTMT)) +
