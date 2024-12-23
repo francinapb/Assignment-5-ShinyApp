@@ -6,6 +6,7 @@
 #
 #    https://shiny.posit.co/
 #
+library(rsconnect)
 library(shiny)
 library(shinydashboard)
 library(plotly)
@@ -241,7 +242,7 @@ server <- function(input, output) {
   # Scatter Plot for month and mortality rate are both continuous variables
   output$bp_relationship_plot <- renderPlotly({
     plot3 <- ggplot(dig.df, aes(x = SYSBP, y = DIABP, colour = TRTMT, shape = TRTMT)) +
-      geom_point() +
+      geom_point(size = 1.2) +
       geom_smooth(method = "lm", formula = y ~ x, se = F) +
       labs(
         title = "Relationship between Systolic and Diastolic Blood Pressure",
