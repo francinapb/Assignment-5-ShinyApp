@@ -143,7 +143,10 @@ ui <- dashboardPage(
       tabItem(tabName = "hospital_plot",
               fluidRow(
                 box(title = "Hospitalizations by Treatment", width = 12,
-                    plotlyOutput("hospital_plot"))
+                    plotlyOutput("hospital_plot"),
+                    div(class = "footer-text",
+                        "By clicking on the variable you want to observe, you can select the different options to isolate it and observe its data.")
+                )
               )
       ),
       
