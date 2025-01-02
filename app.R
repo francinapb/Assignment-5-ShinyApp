@@ -204,11 +204,11 @@ server <- function(input, output) {
     HTML(table1_output)
   })
   
-  # Hospitalization Bar Plot
+  # Hospitalisation Bar Plot
   output$hospital_plot <- renderPlotly({
     hospitalizations <- ggplot(dig.df, aes(x = HOSP, fill = TRTMT)) +
       geom_bar(position = "dodge") +
-      labs(title = "Hospitalizations by Treatment", x = "Hospitalized?", fill = "Treatment") +
+      labs(title = "Hospitalisations by Treatment", x = "Hospitalized?", fill = "Treatment") +
       scale_fill_manual(values = c("#FFAEB9", "#B03060"))
     
     ggplotly(hospitalizations)
