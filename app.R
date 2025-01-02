@@ -14,6 +14,7 @@ library(dplyr)
 library(ggplot2)
 library(ggmosaic)
 library(readr)
+library(table1)
 
 # Load the dataset
 dig.df <- read_csv("DIG.csv")
@@ -80,11 +81,32 @@ ui <- dashboardPage(
           text-align: justify;
           line-height: 1.8;
           font-size: 16px;
+          background-color: #E0F7FA;  
+          color: #374151;  
+          border-radius: 10px;  
       }
       .box-title {
-        color: #98F5FF;  /* Title color updated to desired shade */
-        text-align: center;  /* Center the title */
-        width: 100%;  /* Ensure the title spans full width */
+        color: #98F5FF;  
+        text-align: center;
+        width: 100%;
+      }
+      .summary-table-container {
+        background-color: #FFFFFF;  
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+      }
+      .summary-table-container table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .summary-table-container th, .summary-table-container td {
+        border-bottom: 1px solid #ccc;
+        padding: 10px;
+      }
+      .summary-table-container th {
+        background-color: #f2f2f2;
+        font-weight: bold;
       }
     "))
     ),
@@ -107,7 +129,12 @@ ui <- dashboardPage(
               The <strong>DIG</strong> dataset was obtained for the purpose of this assignment and is enclosed with this assignment. The codebook associated with the variables is also enclosed with your assignment. <br><br>
             
               In order to create an anonymous dataset that protects patient confidentiality, most variables have been permuted over the set of patients within the treatment group. Therefore, it would be inappropriate to use this dataset for other research or publication purposes.
-            "))
+            ")),
+                  tags$p(HTML("
+              The DIG dataset consists of baseline and outcome data from the main DIG trial. In the main trial, heart failure patients meeting the eligibility criterion and whose ejection fraction was 45% or less were randomized to receive either a placebo or digoxin. <br><br>
+            ")),
+                  div(class = "summary-table-container",
+                      htmlOutput("summary_table"))
                 )
               )
       ),
@@ -156,6 +183,26 @@ ui <- dashboardPage(
 
 # Server
 server <- function(input, output) {
+  
+  label(dig.df$AGE)     <- "Age"
+  label(dig.df$SEX)     <- "Sex"
+  label(dig.df$BMI)     <- "Body Mass Index"
+  label(dig.df$KLEVEL)  <- "Serum Potassium Level"
+  label(dig.df$CREAT)   <- "Serum Creatinine"
+  label(dig.df$DIABP)   <- "Diastolic Blood Pressure"
+  label(dig.df$SYSBP)   <- "Systolic Blood Pressure"
+  label(dig.df$HYPERTEN) <- "Hypertension History"
+  label(dig.df$CVD)     <- "Cardiovascular Disease Hospitalisation"
+  label(dig.df$WHF)     <- "Worsening Heart Failure Hospitalisation"
+  label(dig.df$DIG)     <- "Digoxin Toxicity Hospitalisation"
+  label(dig.df$HOSP)    <- "Any Hospitalisation"
+  label(dig.df$TRTMT)   <- "Treatment"
+  
+  #Table1 Summary
+  output$summary_table <- renderUI({
+    table1_output <- table1(~ AGE + SEX + BMI + KLEVEL + CREAT + DIABP + SYSBP + HYPERTEN + CVD + WHF + DIG + HOSP | TRTMT, data = dig.df)
+    HTML(table1_output)
+  })
   
   # Hospitalization Bar Plot
   output$hospital_plot <- renderPlotly({
