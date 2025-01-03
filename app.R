@@ -83,10 +83,10 @@ ui <- dashboardPage(
           font-size: 16px;
           background-color: #E0F7FA;  
           color: #374151;  
-          border-radius: 10px;  
+          border-radius: 20px;  
       }
       .box-title {
-        color: #98F5FF;  
+        color: #66FF99;  
         text-align: center;
         width: 100%;
       }
@@ -111,13 +111,90 @@ ui <- dashboardPage(
     "))
     ),
     
+    tags$head(
+      tags$style(HTML("
+      .skin-blue .main-sidebar {
+        background-color: #F0F4F8;
+      }
+      
+      .skin-blue .sidebar-menu>li>a {
+        color: #374151;
+      }
+      
+      .skin-blue .sidebar-menu>li.active>a {
+        background-color: #D1E9FF;
+        color: #003366;
+        font-weight: bold;
+      }
+      
+      .skin-blue .sidebar-menu>li>.treeview-menu {
+        background-color: #4A708B;
+      }
+      
+      .skin-blue .sidebar-menu>li>.treeview-menu>li>a {
+        color: #9FB6CD;
+      }
+      
+      .skin-blue .sidebar-menu>li>.treeview-menu>li.active>a {
+        background-color: #BBDEFB;
+        color: #003366;
+        font-weight: bold;
+      }
+      
+      .skin-blue .sidebar-menu>li>.treeview-menu>li:hover>a {
+        background-color: #D6EAF8;
+        color: #003366;
+      }
+      
+      .skin-blue .sidebar-menu>li:hover>a {
+        background-color: #E3F2FD;
+        color: #003366;
+      }
+      
+      .skin-blue .main-header .navbar {
+        background-color: #836FFF;
+      }
+      
+      .skin-blue .main-header .logo {
+        background-color: #27408B;
+        color: #FFFFFF;
+        font-weight: bold;
+      }
+      
+      .box {
+        background-color: #FFFFFF;
+        border: 1px solid #D1D5DB;
+        color: #374151;
+      }
+      
+      .box-title {
+        color: #1E88E5;  
+        text-align: center;
+      }
+      
+      .content-wrapper {
+        background-color: #F9FAFB;
+      }
+      
+      .footer-text {
+        text-align: center;
+        font-size: 14px;
+        color: #374151;
+        margin-top: 10px;
+        background-color: #E3F2FD;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    "))
+    ),
+    
     tabItems(
       # Introduction Tab
       tabItem(tabName = "Introduction",
               fluidRow(
                 box(
                   title = "Welcome to the DIG Trial Dashboard",
-                  width = 12,
+                  width = 16,
                   class = "introduction-box",
                   tags$p(HTML("
               <strong>The DIG (Digitalis Investigation Group) Trial</strong> was a randomized, double-blind, multicenter trial with more than 300 centers in the United States and Canada participating. The purpose of the trial was to examine the safety and efficacy of Digoxin in treating patients with congestive heart failure in sinus rhythm. Digitalis was introduced clinically more than 200 years ago and has since become a commonly prescribed medication for the treatment of heart failure; however, there was considerable uncertainty surrounding its safety and efficacy. <br><br>
@@ -142,7 +219,7 @@ ui <- dashboardPage(
       # Hospitalization Plot Tab
       tabItem(tabName = "hospital_plot",
               fluidRow(
-                box(title = "Hospitalizations by Treatment", width = 12,
+                box(title = "Hospitalizations by Treatment", width = 16,
                     plotlyOutput("hospital_plot"),
                     div(class = "footer-text",
                         "Interact with the plot. You can select the different variables of the legend.")
@@ -153,7 +230,7 @@ ui <- dashboardPage(
       # CVD and Mortality Plot Tab
       tabItem(tabName = "cvd_plot",
               fluidRow(
-                box(title = "Cardiovascular Disease and Mortality", width = 12,
+                box(title = "Cardiovascular Disease and Mortality", width = 16,
                     plotlyOutput("cvd_mortality_plot"),
                     div(class = "footer-text",
                         "Interact with the plot. You can select the different variables of the legend.")
@@ -164,28 +241,29 @@ ui <- dashboardPage(
       # WHF and Hospitalization Plot Tab
       tabItem(tabName = "whf_plot",
               fluidRow(
-                box(title = "Worsening Heart Failure and Hospitalizations", width = 12,
+                box(title = "Worsening Heart Failure and Hospitalizations", width = 16,
                     plotlyOutput("whf_hosp_plot"),
                     div(class = "footer-text",
                         "Interact with the plot. You can select the different variables of the legend.")
                     )
               )
       ),
-      # Mortality Over Time Plot Tab
       
+      # Mortality Over Time Plot Tab
       tabItem(tabName = "mortality_plot",
               fluidRow(
-                box(title = "Mortality Over Time by CVD", width = 12,
+                box(title = "Mortality Over Time by CVD", width = 16,
                     plotlyOutput("mortality_rate_plot"),
                     div(class = "footer-text",
                         "Interact with the plot. You can select the different variables of the legend.")
                     )
               )
       ),
+      
       # Blood Pressure Relationship Plot Tab
       tabItem(tabName = "bp_plot",
               fluidRow(
-                box(title = "Blood Pressure Relationship", width = 12,
+                box(title = "Blood Pressure Relationship", width = 16,
                     plotlyOutput("bp_relationship_plot"),
                     div(class = "footer-text",
                         "Interact with the plot. You can select the different variables of the legend.")
