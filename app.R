@@ -145,8 +145,8 @@ ui <- dashboardPage(
                 box(title = "Hospitalizations by Treatment", width = 12,
                     plotlyOutput("hospital_plot"),
                     div(class = "footer-text",
-                        "By clicking on the variable you want to observe, you can select the different options to isolate it and observe its data.")
-                )
+                        "Interact with the plot. You can select the different variables of the legend.")
+                  )
               )
       ),
       
@@ -154,7 +154,10 @@ ui <- dashboardPage(
       tabItem(tabName = "cvd_plot",
               fluidRow(
                 box(title = "Cardiovascular Disease and Mortality", width = 12,
-                    plotlyOutput("cvd_mortality_plot"))
+                    plotlyOutput("cvd_mortality_plot"),
+                    div(class = "footer-text",
+                        "Interact with the plot. You can select the different variables of the legend.")
+                  )
               )
       ),
       
@@ -162,7 +165,10 @@ ui <- dashboardPage(
       tabItem(tabName = "whf_plot",
               fluidRow(
                 box(title = "Worsening Heart Failure and Hospitalizations", width = 12,
-                    plotlyOutput("whf_hosp_plot"))
+                    plotlyOutput("whf_hosp_plot"),
+                    div(class = "footer-text",
+                        "Interact with the plot. You can select the different variables of the legend.")
+                    )
               )
       ),
       # Mortality Over Time Plot Tab
@@ -170,14 +176,20 @@ ui <- dashboardPage(
       tabItem(tabName = "mortality_plot",
               fluidRow(
                 box(title = "Mortality Over Time by CVD", width = 12,
-                    plotlyOutput("mortality_rate_plot"))
+                    plotlyOutput("mortality_rate_plot"),
+                    div(class = "footer-text",
+                        "Interact with the plot. You can select the different variables of the legend.")
+                    )
               )
       ),
       # Blood Pressure Relationship Plot Tab
       tabItem(tabName = "bp_plot",
               fluidRow(
                 box(title = "Blood Pressure Relationship", width = 12,
-                    plotlyOutput("bp_relationship_plot"))
+                    plotlyOutput("bp_relationship_plot"),
+                    div(class = "footer-text",
+                        "Interact with the plot. You can select the different variables of the legend.")
+                    )
               )
       )
     )
