@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 #
 # This is a Shiny web application. You can run the application by clicking
 # the 'Run App' button above.
@@ -9,7 +8,7 @@
 #    https://shiny.posit.co/
 #
 library(rsconnect)
->>>>>>> eb860c9f3d48688dcad763f63e11edce632ee8c4
+
 library(shiny)
 
 library(plotly)
@@ -100,7 +99,7 @@ ui <- navbarPage(
            )
            
   ),
-<<<<<<< HEAD
+
   
   
   
@@ -204,7 +203,7 @@ ui <- navbarPage(
              
            )
            
-=======
+
   dashboardBody(
     tags$head(
       tags$style(HTML("
@@ -323,7 +322,7 @@ ui <- navbarPage(
               )
       )
     )
->>>>>>> eb860c9f3d48688dcad763f63e11edce632ee8c4
+
   )
   
 )
@@ -334,7 +333,7 @@ ui <- navbarPage(
 
 server <- function(input, output) {
   
-<<<<<<< HEAD
+
   
   
   # Filtered Dataset for Hospitalization Plot
@@ -363,7 +362,7 @@ server <- function(input, output) {
   
   # Hospitalization Plot
   
-=======
+
   label(dig.df$AGE)     <- "Age"
   label(dig.df$SEX)     <- "Sex"
   label(dig.df$BMI)     <- "Body Mass Index"
@@ -513,14 +512,13 @@ server <- function(input, output) {
     ggplotly(bp_plot)
     
   })
-<<<<<<< HEAD
+
   
 }
 
 
 
-shinyApp(ui, server)
-=======
+
   # Scatter Plot for month and mortality rate are both continuous variables
   output$bp_relationship_plot <- renderPlotly({
     plot3 <- ggplot(dig.df, aes(x = SYSBP, y = DIABP, colour = TRTMT, shape = TRTMT)) +
@@ -540,4 +538,3 @@ shinyApp(ui, server)
 
 shinyApp(ui, server)
 
->>>>>>> eb860c9f3d48688dcad763f63e11edce632ee8c4
