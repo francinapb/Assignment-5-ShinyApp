@@ -18,8 +18,6 @@ library(table1)
 
 
 dig.df <- read_csv("DIG.csv")
-
-# Data Preparation
 dig.df <- dig.df %>%
   select(ID, TRTMT, AGE, SEX, BMI, KLEVEL, CREAT, DIABP, SYSBP, HYPERTEN, CVD, WHF, DIG, HOSP, HOSPDAYS, DEATH, DEATHDAY) %>%
   mutate(ID = as.numeric(ID),
@@ -39,14 +37,6 @@ dig.df <- dig.df %>%
          DEATH = factor(DEATH, levels = c(0, 1), labels = c("Alive", "Death"))
   )
 
-# Simulated Mortality Rate Data
-set.seed(123)
-risk_mortality_summary2 <- data.frame(
-  Month = rep(1:12, each = 4),
-  Mortality_Rate = runif(48, 0.05, 0.3),
-  CVD = rep(c("Yes", "No"), 24),
-  TRTMT = rep(c("Placebo", "Treatment"), each = 24)
-)
 
 # UI
 ui <- dashboardPage(
