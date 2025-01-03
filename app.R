@@ -1,52 +1,55 @@
-# Full Shiny Code
-# UI and server definitions for the clinical trial dashboard with sliders
+#
 
+# This is a Shiny web application. You can run the application by clicking
+
+# the 'Run App' button above.
+
+#
+
+# Find out more about building applications with Shiny here:
+
+#
+
+#    https://shiny.posit.co/
+
+library(rsconnect)
 library(shiny)
 library(shinydashboard)
-library(ggplot2)
 library(plotly)
 library(dplyr)
+library(ggplot2)
 library(ggmosaic)
+library(readr)
+library(table1)
 
-# Load the dataset
+# Load your dataset, assuming it is named 'dig.df'
 
 dig.df <- read_csv("DIG.csv")
-# Replace with the actual data-loading code
+
+# Data Preparation
+
 dig.df <- dig.df %>%
   
   select(ID, TRTMT, AGE, SEX, BMI, KLEVEL, CREAT, DIABP, SYSBP, HYPERTEN, CVD, WHF, DIG, HOSP, HOSPDAYS, DEATH, DEATHDAY) %>%
   
   mutate(ID = as.numeric(ID),
-         
          TRTMT = factor(TRTMT, levels = c(0, 1), labels = c("Placebo", "Treatment")),
-         
          AGE = as.numeric(AGE),
-         
          SEX = factor(SEX, levels = c(1, 2), labels = c("Male", "Female")),
-         
          BMI = as.numeric(BMI),
-         
          KLEVEL = as.numeric(KLEVEL),
-         
          CREAT = as.numeric(CREAT),
-         
          DIABP = as.numeric(DIABP),
-         
          SYSBP = as.numeric(SYSBP),
-         
          HYPERTEN = factor(HYPERTEN, levels = c(0, 1), labels = c("No", "Yes")),
-         
          CVD = factor(CVD, levels = c(1, 0), labels = c("Yes", "No")),
-         
          WHF = factor(WHF, levels = c(1, 0), labels = c("Yes", "No")),
-         
          DIG = factor(DIG, levels = c(0, 1), labels = c("No", "Yes")),
-         
          HOSP = factor(HOSP, levels = c(1, 0), labels = c("Yes", "No")),
-         
          DEATH = factor(DEATH, levels = c(0, 1), labels = c("Alive", "Death"))
          
   )
+
 
 
 risk_mortality_summary2 <- data.frame(
@@ -79,6 +82,7 @@ ui <- dashboardPage(
                   max = max(dig.df$DIABP, na.rm = TRUE), value = range(dig.df$DIABP, na.rm = TRUE))
     )
   ),
+  
   dashboardBody(
     
     tags$head(
@@ -194,10 +198,22 @@ ui <- dashboardPage(
                   tags$p(HTML("
 
               <strong>The DIG (Digitalis Investigation Group) Trial</strong> was a randomized, double-blind, multicenter trial with more than 300 centers in the United States and Canada participating. The purpose of the trial was to examine the safety and efficacy of Digoxin in treating patients with congestive heart failure in sinus rhythm. Digitalis was introduced clinically more than 200 years ago and has since become a commonly prescribed medication for the treatment of heart failure; however, there was considerable uncertainty surrounding its safety and efficacy. <br><br>
-Small trials indicated that Digoxin alleviated some of the symptoms of heart failure, prolonged exercise tolerance, and generally improved the quality of patients' lives. Unfortunately, these trials were generally small and although they did focus on the effect of treatment on patients’ relief from heart failure symptoms and quality of life, they failed to address the effect of treatment on cardiovascular outcomes. Questions about the safety of Digoxin were also a concern. Digoxin toxicity is uncommon in small trials with careful surveillance, however, the long-term effects of therapeutic levels of Digoxin were less clear. <br><br>
-The DIG dataset consists of baseline and outcome data from the main DIG trial. In the main trial, heart failure patients meeting the eligibility criterion and whose ejection fraction was 45% or less were randomized to receive either a placebo or digoxin. Outcomes assessed in the trial included: cardiovascular mortality, hospitalization or death from worsening heart failure, hospitalization due to other cardiovascular causes and hospitalization due to non-cardiovascular causes. <br><br>
-The <strong>DIG</strong> dataset was obtained for the purpose of this assignment and is enclosed with this assignment. The codebook associated with the variables is also enclosed with your assignment. <br><br>
-In order to create an anonymous dataset that protects patient confidentiality, most variables have been permuted over the set of patients within the treatment group. Therefore, it would be inappropriate to use this dataset for other research or publication purposes.
+
+           
+
+              Small trials indicated that Digoxin alleviated some of the symptoms of heart failure, prolonged exercise tolerance, and generally improved the quality of patients' lives. Unfortunately, these trials were generally small and although they did focus on the effect of treatment on patients’ relief from heart failure symptoms and quality of life, they failed to address the effect of treatment on cardiovascular outcomes. Questions about the safety of Digoxin were also a concern. Digoxin toxicity is uncommon in small trials with careful surveillance, however, the long-term effects of therapeutic levels of Digoxin were less clear. <br><br>
+
+           
+
+              The DIG dataset consists of baseline and outcome data from the main DIG trial. In the main trial, heart failure patients meeting the eligibility criterion and whose ejection fraction was 45% or less were randomized to receive either a placebo or digoxin. Outcomes assessed in the trial included: cardiovascular mortality, hospitalization or death from worsening heart failure, hospitalization due to other cardiovascular causes and hospitalization due to non-cardiovascular causes. <br><br>
+
+           
+
+              The <strong>DIG</strong> dataset was obtained for the purpose of this assignment and is enclosed with this assignment. The codebook associated with the variables is also enclosed with your assignment. <br><br>
+
+           
+
+              In order to create an anonymous dataset that protects patient confidentiality, most variables have been permuted over the set of patients within the treatment group. Therefore, it would be inappropriate to use this dataset for other research or publication purposes.
 
             ")),
                   
@@ -206,10 +222,15 @@ In order to create an anonymous dataset that protects patient confidentiality, m
               The DIG dataset consists of baseline and outcome data from the main DIG trial. In the main trial, heart failure patients meeting the eligibility criterion and whose ejection fraction was 45% or less were randomized to receive either a placebo or digoxin. <br><br>
 
             ")),
+                  
                   div(class = "summary-table-container",
+                      
                       htmlOutput("summary_table"))
+                  
                 )
+                
               )
+              
       ),
       
       
@@ -324,7 +345,6 @@ server <- function(input, output) {
     table1_output <- table1(~ AGE + SEX + BMI + KLEVEL + CREAT + DIABP + SYSBP + HYPERTEN + CVD + WHF + DIG + HOSP | TRTMT, data = dig.df)
     HTML(table1_output)
   })
-  
   
   filtered_data <- reactive({
     dig.df %>%
